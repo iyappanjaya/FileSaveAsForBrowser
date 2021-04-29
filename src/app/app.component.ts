@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FileUtilService } from './services/file-util.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'downloader';
+  constructor(public fileDownloader: FileUtilService) { }
+  donwload() {
+    this.fileDownloader.getPDF();
+  }
 }
