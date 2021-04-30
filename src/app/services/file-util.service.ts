@@ -1,31 +1,52 @@
-
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 declare const window: any;
 @Injectable()
 
 export class FileUtilService {
-    public fileHandle: any;
-    constructor(public http: HttpClient) {
-    }
     getPDF() {
+        let content;
+        fetch('./assets/dummy.pdf').then((response) => response.blob()).then(blob1 => { content = blob1; });
         this.getNewFileHandle().then((data: any) => {
-            this.writeFile(data, 'Hello Welcome !');
+            this.writeFile(data, content);
         });
     }
 
     async getNewFileHandle() {
+        let handle;
         const opts = {
             id: 'SaveFilePicker',
-            suggestedName: 'downloadr_example.txt',
+            suggestedName: 'downloadr_example.pdf',
             types: [{
-                description: 'Text file',
-                accept: { 'text/plain': ['.txt'] },
+                description: 'PDF document',
+                accept: { 'application/pdf': ['.pdf'] },
             }],
         };
-        const handle = await window.showSaveFilePicker(opts);
+        handle = await window.showSaveFilePicker(opts);
         return handle;
+        // if ('showSaveFilePicker' in window) {
+        //     const opts = {
+        //         id: 'SaveFilePicker',
+        //         suggestedName: 'downloadr_example.pdf',
+        //         types: [{
+        //             description: 'PDF document',
+        //             accept: { 'application/pdf': ['.pdf'] },
+        //         }],
+        //     };
+        //     handle = await window.showSaveFilePicker(opts);
+        // } else {
+        //     // For Chrome 85 and earlier...
+        //     const opts = {
+        //         type: 'save-file',
+        //         accepts: [{
+        //             description: 'PDF document',
+        //             extensions: ['pdf'],
+        //             mimeTypes: ['application/pdf'],
+        //         }],
+        //     };
+        //     handle = window.chooseFileSystemEntries(opts);
+        // }
+        // return handle;
     }
     async writeFile(fileHandle, contents) {
         // Create a FileSystemWritableFileStream to write to.
